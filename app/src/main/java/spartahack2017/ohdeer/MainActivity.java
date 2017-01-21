@@ -1,15 +1,17 @@
 package spartahack2017.ohdeer;
 
-import android.*;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 	static String AVOID_DEER = "AVOID_DEER";
 	static String POP_UPS = "POP_UPS";
 	final static int MY_PERMISSIONS_REQUEST_LOCATION = 0;
+	final Cloud cloud = new Cloud();
 
 
 	@Override
@@ -25,6 +28,37 @@ public class MainActivity extends AppCompatActivity {
 		setContentView( R.layout.activity_main );
 
 		checkIfPermissionsGranted();
+
+
+		new Thread(
+				new Runnable() {
+					@Override
+					public void run(){
+						getCloudData();
+					}
+				}
+		).start();
+	}
+
+
+	public void updateText( String newText ){
+		( ( TextView ) findViewById( R.id.textView ) ).setText( newText );
+	}
+
+
+	public void getCloudData(){
+		final String data = cloud.getDataFromCloud();
+		Log.i( "data", data );
+
+		Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
+
+		Runnable myRunnable = new Runnable() {
+			@Override
+			public void run(){
+				updateText( data );
+			}
+		};
+		mainHandler.post( myRunnable );
 	}
 
 
@@ -67,4 +101,6 @@ public class MainActivity extends AppCompatActivity {
 			ActivityCompat.requestPermissions( this, new String[]{ android.Manifest.permission.ACCESS_FINE_LOCATION }, MY_PERMISSIONS_REQUEST_LOCATION );
 		}
 	}
+
+
 }
