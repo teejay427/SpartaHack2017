@@ -9,17 +9,20 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.FrameLayout.LayoutParams;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -72,10 +75,13 @@ public class MainActivity extends AppCompatActivity {
 		String[] tipsArray;
 
 		tipsArray = res.getStringArray( R.array.myArray );
+		int sleepTime;
 
-
+		//noinspection InfiniteLoopStatement
 		while( true ){
 			final String nextTip = tipsArray[ random.nextInt( tipsArray.length ) ];
+
+			Log.i( "nextTip", "Next tip: " + nextTip );
 
 			Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
 			Runnable myRunnable = new Runnable() {
@@ -85,12 +91,20 @@ public class MainActivity extends AppCompatActivity {
 				}
 			};
 			mainHandler.post( myRunnable );
+
+			sleepTime = nextTip.length() * 700;
+			SystemClock.sleep( sleepTime );
 		}
 	}
 
 
 	public void updateTip( String nextTip ){
-		( ( TextSwitcher ) findViewById( R.id.tipsTextSwitcher ) ).setText( nextTip );
+		TextSwitcher textSwitcher = ( TextSwitcher ) findViewById( R.id.tipsTextSwitcher );
+		Log.d( "textSwitcher", Boolean.toString( textSwitcher == null ) );
+		Log.d( "nextTip", Boolean.toString( nextTip == null ) );
+		if( textSwitcher != null && nextTip != null ){
+			textSwitcher.setText( nextTip );
+		}
 	}
 
 
