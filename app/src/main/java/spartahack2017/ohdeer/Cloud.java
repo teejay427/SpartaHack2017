@@ -14,9 +14,7 @@ class Cloud {
 		try{
 			URL sql_data = new URL( SQL_URL );
 
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(
-							sql_data.openStream() ) );
+			BufferedReader in = new BufferedReader( new InputStreamReader( sql_data.openStream() ) );
 
 			String inputLine;
 
