@@ -8,8 +8,8 @@ import android.widget.CheckBox;
 
 public class MainActivity extends AppCompatActivity {
 
-	static String AVOIDDEER = "AVOID_DEER";
-	static String POPUPS = "POP_UPS";
+	static String AVOID_DEER = "AVOID_DEER";
+	static String POP_UPS = "POP_UPS";
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ){
@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
 	public void onLaunchMapButtonClick( View view ){
 		Intent mapActivity = new Intent( this, MapsActivity.class );
-		mapActivity.putExtra( AVOIDDEER, getAvoidDeerCheckBox().isChecked() );
-		mapActivity.putExtra( POPUPS, getPopUpsCheckBox().isChecked() );
+		mapActivity.putExtra( AVOID_DEER, getAvoidDeerCheckBox().isChecked() );
+		mapActivity.putExtra( POP_UPS, getPopUpsCheckBox().isChecked() );
 		startActivity( mapActivity );
 		this.finish();
 	}

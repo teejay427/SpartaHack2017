@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 	private GoogleMap mMap;
+	private boolean plotAroundDeer;
+	private boolean showPopUps = true;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ){
@@ -22,6 +24,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		SupportMapFragment mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
 				.findFragmentById( R.id.map );
 		mapFragment.getMapAsync( this );
+
+		plotAroundDeer = this.getIntent().getBooleanExtra( MainActivity.AVOID_DEER, false );
+		showPopUps = this.getIntent().getBooleanExtra( MainActivity.POP_UPS, false );
 	}
 
 
@@ -42,5 +47,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		LatLng sydney = new LatLng( -34, 151 );
 		mMap.addMarker( new MarkerOptions().position( sydney ).title( "Marker in Sydney" ) );
 		mMap.moveCamera( CameraUpdateFactory.newLatLng( sydney ) );
+
+		LatLng lansing = new LatLng( 42.712697, -84.544615 );
+		if( plotAroundDeer ){
+			mMap.addMarker( new MarkerOptions().position( lansing ).title( "Marker in Lansing" ) );
+			// This goes up to 21, 7.0 is good for zooming into the lower peninsula on a Nexus 7
+			float zoomLevel = 7.0f;
+			mMap.moveCamera( CameraUpdateFactory.newLatLngZoom( lansing, zoomLevel ) );
+		}
+
 	}
 }

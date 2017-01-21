@@ -26,7 +26,8 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/popUpsCheckBox"
 		android:layout_below="@+id/avoidDeerCheckBox"
-		android:layout_centerHorizontal="true" />
+		android:layout_centerHorizontal="true"
+		android:textSize="18sp" />
 
 	<Button
 		android:text="@string/launch_map"
@@ -43,5 +44,6 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/avoidDeerCheckBox"
 		android:layout_below="@+id/splashImageView"
-		android:layout_centerHorizontal="true" />
+		android:layout_centerHorizontal="true"
+		android:textSize="18sp" />
 </RelativeLayout>
