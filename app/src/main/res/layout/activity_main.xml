@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/activity_main"
 	android:layout_width="match_parent"
@@ -11,8 +12,35 @@
 	android:paddingTop="@dimen/activity_vertical_margin"
 	tools:context="spartahack2017.ohdeer.MainActivity">
 
-	<TextView
+	<ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Hello World!" />
+		app:srcCompat="@drawable/deer"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:id="@+id/splashImageView" />
+
+	<CheckBox
+		android:text="@string/avoid_deer"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/avoidDeerCheckBox"
+		android:layout_below="@+id/splashImageView"
+		android:layout_centerHorizontal="true" />
+
+	<CheckBox
+		android:text="@string/show_alerts"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/popUpsCheckBox"
+		android:layout_below="@+id/avoidDeerCheckBox"
+		android:layout_centerHorizontal="true" />
+
+	<Button
+		android:text="@string/launch_map"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/launchMapButton"
+		android:layout_below="@+id/popUpsCheckBox"
+		android:layout_centerHorizontal="true" />
 </RelativeLayout>
