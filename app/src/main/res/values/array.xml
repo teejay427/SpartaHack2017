@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="myArray">
-		<item>string 1</item>
-		<item>string 2</item>
-		<item>string 3</item>
-		<item>string 4</item>
-		<item>string 5</item>
+		<item>Slow down if you are in a dangerous area</item>
+		<item>Always wear a seat belt</item>
+		<item>Never swerve to avoid hitting a deer</item>
+		<item>If collision occurs, let off the breaks to decrease the chances of the animal coming through the wind shield</item>
 	</string-array>
 </resources>
