@@ -1,34 +1,94 @@
 package spartahack2017.ohdeer;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+import android.util.Xml;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 class Cloud {
 
 	private static final String SQL_URL = "http://35.20.93.181/";
 
-	String getDataFromCloud(){
-		String response = "";
+	@SuppressLint( "DefaultLocale" )
+	String getDataFromCloud( Double lat, Double lon ){
+		String response;
+		String postDataStr = "";
+
+		Log.d( "data", "starting data pull" );
+
 		try{
-			URL sql_data = new URL( SQL_URL );
+			postDataStr = "lat=" + URLEncoder.encode( String.format( "%.1f", lat ), "UTF-8" );
+			postDataStr += "&lon=" + URLEncoder.encode( String.format( "%.1f", lon ), "UTF-8" );
+		}
+		catch( UnsupportedEncodingException ignore ){
+		}
+		byte[] postData = postDataStr.getBytes();
 
-			BufferedReader in = new BufferedReader( new InputStreamReader( sql_data.openStream() ) );
+		InputStream stream = null;
 
-			String inputLine;
+		try{
+			URL url = new URL( SQL_URL );
 
-			while( ( inputLine = in.readLine() ) != null ){
-				response += inputLine;
+			HttpURLConnection conn = ( HttpURLConnection ) url.openConnection();
+
+			conn.setDoOutput( true );
+			conn.setRequestMethod( "POST" );
+			conn.setRequestProperty( "Content-Length", Integer.toString( postData.length ) );
+			conn.setUseCaches( false );
+
+			OutputStream out = conn.getOutputStream();
+			out.write( postData );
+			out.close();
+
+			int responseCode = conn.getResponseCode();
+			if( responseCode != HttpURLConnection.HTTP_OK ){
+				return "http not ok";
 			}
 
-			in.close();
-		}
-		catch( IOException e ){
-			e.printStackTrace();
-		}
+			stream = conn.getInputStream();
 
-		return response;
+			BufferedReader r = new BufferedReader( new InputStreamReader( stream ) );
+			StringBuilder total = new StringBuilder();
+			String line;
+			while( ( line = r.readLine() ) != null ){
+				total.append( line ).append( '\n' );
+			}
+
+			response = total.substring( 199 );
+
+			stream.close();
+			Log.d( "data", "finished data pull" );
+			return response;
+		}
+		catch( MalformedURLException e ){
+			return "malformed url";
+		}
+		catch( IOException ex ){
+			return "ioexception";
+		}
+		finally{
+			if( stream != null ){
+				try{
+					stream.close();
+				}
+				catch( IOException ex ){
+					// Fail silently
+				}
+			}
+		}
 	}
 
 }

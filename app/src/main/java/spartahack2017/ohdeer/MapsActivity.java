@@ -10,6 +10,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Calendar;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 	private GoogleMap mMap;
@@ -48,13 +50,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		mMap.addMarker( new MarkerOptions().position( sydney ).title( "Marker in Sydney" ) );
 		mMap.moveCamera( CameraUpdateFactory.newLatLng( sydney ) );
 
-		LatLng lansing = new LatLng( 42.712697, -84.544615 );
-		if( plotAroundDeer ){
-			mMap.addMarker( new MarkerOptions().position( lansing ).title( "Marker in Lansing" ) );
-			// This goes up to 21, 7.0 is good for zooming into the lower peninsula on a Nexus 7
-			float zoomLevel = 7.0f;
-			mMap.moveCamera( CameraUpdateFactory.newLatLngZoom( lansing, zoomLevel ) );
+		LatLng tempLatLng;
+		for( myLocation tempLocation : MainActivity.forMap ){
+			tempLatLng = new LatLng( tempLocation.lat, tempLocation.lon );
+			mMap.addMarker( new MarkerOptions().position( tempLatLng ).title(
+				tempLocation.calendar.get( Calendar.YEAR ) + "-" +
+				tempLocation.calendar.get( Calendar.MONTH ) + "-" +
+				tempLocation.calendar.get( Calendar.DAY_OF_MONTH ) ) );
 		}
 
+		float zoomLevel = 12.0f;
+		mMap.moveCamera( CameraUpdateFactory.newLatLngZoom( MainActivity.currentLocation, zoomLevel ) );
 	}
 }

@@ -19,6 +19,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+
 public class MainActivity extends AppCompatActivity {
 
 	static String AVOID_DEER = "AVOID_DEER";
@@ -29,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
 	private final ActiveListener activeListener = new ActiveListener();
 	private double lon;
 	private double lat;
-
+	private float bearing;
+	static ArrayList<myLocation> forMap = new ArrayList<>();
+	static LatLng currentLocation;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ){
@@ -40,15 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
 		// Get the location manager
 		locationManager = ( LocationManager ) getSystemService( Context.LOCATION_SERVICE );
-
-		new Thread(
-				new Runnable() {
-					@Override
-					public void run(){
-						getCloudData();
-					}
-				}
-		).start();
 	}
 
 
@@ -58,15 +58,102 @@ public class MainActivity extends AppCompatActivity {
 
 
 	public void getCloudData(){
-		final String data = "Current Location: " + Double.toString( lat ) + ", " + Double.toString( lon ) + "\n" + cloud.getDataFromCloud();
+		String cloudData = cloud.getDataFromCloud( lat, lon );
+		ArrayList<String> locations = new ArrayList<>();
+		ArrayList<myLocation> sqlLocations = new ArrayList<>();
+
+		Collections.addAll( locations, cloudData.split( ";" ) );
+
+		locations.remove( locations.size() - 1 );
+
+		String data = "Current location: " + Double.toString( lat ) + ", " + Double.toString( lon ) + "\n";
+		data += "Bearing: " + Float.toString( bearing ) + "\n";
+		double tempLat;
+		double tempLon;
+		Calendar calendar = new Calendar() {
+			@Override
+			protected void computeTime(){
+
+			}
+
+			@Override
+			protected void computeFields(){
+
+			}
+
+			@Override
+			public void add( int i, int i1 ){
+
+			}
+
+			@Override
+			public void roll( int i, boolean b ){
+
+			}
+
+			@Override
+			public int getMinimum( int i ){
+				return 0;
+			}
+
+			@Override
+			public int getMaximum( int i ){
+				return 0;
+			}
+
+			@Override
+			public int getGreatestMinimum( int i ){
+				return 0;
+			}
+
+			@Override
+			public int getLeastMaximum( int i ){
+				return 0;
+			}
+		};
+		for( String location : locations ){
+			String[] dataPoints = location.split( "," );
+			calendar.set( Integer.parseInt( dataPoints[0].substring( 0,4 ) ), Integer.parseInt( dataPoints[0].substring( 5,7 ) ), Integer.parseInt( dataPoints[0].substring( 8,10 ) ) );
+			tempLat = Double.parseDouble( dataPoints[1] );
+			tempLon = Double.parseDouble( dataPoints[2] );
+			sqlLocations.add( new myLocation( calendar, tempLat, tempLon ) );
+		}
+
+		ArrayList<myLocation> nearLocations = new ArrayList<>();
+		double updatedLat;
+		double updatedLon;
+		for( int i = 0; i < 3; ++i ){
+			updatedLat = i * 0.01 * Math.cos( bearing - 90 ) + lat;
+			updatedLon = i * 0.01 * Math.sin( bearing - 90 ) + lon;
+
+			for( myLocation tempLocation : sqlLocations ){
+				float[] distance = new float[ 1 ];
+
+				Location.distanceBetween( updatedLat, updatedLon, tempLocation.lat, tempLocation.lon, distance );
+
+				if( distance[ 0 ] < 4828 ){
+					if( !nearLocations.contains( tempLocation ) ){
+						nearLocations.add( tempLocation );
+						data += nearLocations.get( nearLocations.size() - 1 ).toString() + "\n";
+					}
+				}
+			}
+		}
+
+		data += "Count: " + Integer.toString( nearLocations.size() ) + "\n";
+
 		Log.i( "data", data );
+
+		forMap = nearLocations;
+
+		final String finalData = data;
 
 		Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
 
 		Runnable myRunnable = new Runnable() {
 			@Override
 			public void run(){
-				updateText( data );
+				updateText( finalData );
 			}
 		};
 		mainHandler.post( myRunnable );
@@ -78,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
 		mapActivity.putExtra( AVOID_DEER, getAvoidDeerCheckBox().isChecked() );
 		mapActivity.putExtra( POP_UPS, getPopUpsCheckBox().isChecked() );
 		startActivity( mapActivity );
-		this.finish();
 	}
 
 
@@ -152,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
 		Log.i( "location", Double.toString( location.getLatitude() ) + ", " + Double.toString( location.getLongitude() ) );
 		lat = location.getLatitude();
 		lon = location.getLongitude();
+		bearing = location.getBearing();
+		currentLocation = new LatLng( lat, lon );
 		new Thread(
 				new Runnable() {
 					@Override
