@@ -3,6 +3,7 @@ package spartahack2017.ohdeer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,15 +17,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 	private float bearing;
 	static ArrayList<myLocation> forMap = new ArrayList<>();
 	static LatLng currentLocation;
+	private static final Random random = new Random();
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ){
@@ -47,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
 		checkIfPermissionsGranted();
 
+		new Thread( new Runnable() {
+			@Override
+			public void run(){
+				runTips();
+			}
+		} ).start();
+
 		// Get the location manager
 		locationManager = ( LocationManager ) getSystemService( Context.LOCATION_SERVICE );
 	}
@@ -54,6 +64,33 @@ public class MainActivity extends AppCompatActivity {
 
 	public void updateText( String newText ){
 		( ( TextView ) findViewById( R.id.textView ) ).setText( newText );
+	}
+
+
+	public void runTips(){
+		Resources res = getResources();
+		String[] tipsArray;
+
+		tipsArray = res.getStringArray( R.array.myArray );
+
+
+		while( true ){
+			final String nextTip = tipsArray[ random.nextInt( tipsArray.length ) ];
+
+			Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
+			Runnable myRunnable = new Runnable() {
+				@Override
+				public void run(){
+					updateTip( nextTip );
+				}
+			};
+			mainHandler.post( myRunnable );
+		}
+	}
+
+
+	public void updateTip( String nextTip ){
+		( ( TextSwitcher ) findViewById( R.id.tipsTextSwitcher ) ).setText( nextTip );
 	}
 
 
@@ -113,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
 		};
 		for( String location : locations ){
 			String[] dataPoints = location.split( "," );
-			calendar.set( Integer.parseInt( dataPoints[0].substring( 0,4 ) ), Integer.parseInt( dataPoints[0].substring( 5,7 ) ), Integer.parseInt( dataPoints[0].substring( 8,10 ) ) );
-			tempLat = Double.parseDouble( dataPoints[1] );
-			tempLon = Double.parseDouble( dataPoints[2] );
+			calendar.set( Integer.parseInt( dataPoints[ 0 ].substring( 0, 4 ) ), Integer.parseInt( dataPoints[ 0 ].substring( 5, 7 ) ), Integer.parseInt( dataPoints[ 0 ].substring( 8, 10 ) ) );
+			tempLat = Double.parseDouble( dataPoints[ 1 ] );
+			tempLon = Double.parseDouble( dataPoints[ 2 ] );
 			sqlLocations.add( new myLocation( calendar, tempLat, tempLon ) );
 		}
 
