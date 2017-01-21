@@ -16,13 +16,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,8 +30,6 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-	static String AVOID_DEER = "AVOID_DEER";
-	static String POP_UPS = "POP_UPS";
 	final static int MY_PERMISSIONS_REQUEST_LOCATION = 0;
 	final Cloud cloud = new Cloud();
 	LocationManager locationManager = null;
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 			};
 			mainHandler.post( myRunnable );
 
-			sleepTime = nextTip.length() * 700;
+			sleepTime = nextTip.length() * 200;
 			SystemClock.sleep( sleepTime );
 		}
 	}
@@ -213,19 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
 	public void onLaunchMapButtonClick( View view ){
 		Intent mapActivity = new Intent( this, MapsActivity.class );
-		mapActivity.putExtra( AVOID_DEER, getAvoidDeerCheckBox().isChecked() );
-		mapActivity.putExtra( POP_UPS, getPopUpsCheckBox().isChecked() );
 		startActivity( mapActivity );
-	}
-
-
-	private CheckBox getAvoidDeerCheckBox(){
-		return ( CheckBox ) findViewById( R.id.avoidDeerCheckBox );
-	}
-
-
-	private CheckBox getPopUpsCheckBox(){
-		return ( CheckBox ) findViewById( R.id.popUpsCheckBox );
 	}
 
 

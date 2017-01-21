@@ -19,57 +19,46 @@
 		android:layout_alignParentTop="true"
 		android:layout_centerHorizontal="true"
 		android:id="@+id/splashImageView"
-		android:contentDescription="@string/splash" />
+		android:contentDescription="@string/splash"
+		android:layout_marginBottom="30dp" />
 
-	<CheckBox
-		android:text="@string/show_alerts"
-		android:layout_width="wrap_content"
+	<TextSwitcher
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/popUpsCheckBox"
-		android:layout_below="@+id/avoidDeerCheckBox"
-		android:layout_centerHorizontal="true"
-		android:textSize="18sp" />
+		android:id="@+id/tipsTextSwitcher"
+		android:layout_below="@id/splashImageView"
+		android:layout_marginBottom="30dp" >
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:text="@string/dummy"
+			android:textAppearance="@android:style/TextAppearance.Material.Large"
+			android:textStyle="normal|bold" />
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:textAppearance="@android:style/TextAppearance.Material.Large"
+			android:textStyle="normal|bold" />
+
+	</TextSwitcher>
 
 	<Button
 		android:text="@string/launch_map"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/launchMapButton"
-		android:layout_below="@+id/popUpsCheckBox"
+		android:layout_below="@+id/tipsTextSwitcher"
 		android:layout_centerHorizontal="true"
-		android:onClick="onLaunchMapButtonClick" />
-
-	<CheckBox
-		android:text="@string/avoid_deer"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/avoidDeerCheckBox"
-		android:layout_below="@+id/splashImageView"
-		android:layout_centerHorizontal="true"
-		android:textSize="18sp" />
-
-	<TextSwitcher
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/tipsTextSwitcher"
-		android:layout_below="@id/launchMapButton" >
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:gravity="center"
-			android:text="@string/dummy" />
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:gravity="center" />
-
-	</TextSwitcher>
+		android:onClick="onLaunchMapButtonClick"
+		android:layout_marginBottom="10dp" />
 
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/tipsTextSwitcher"
+		android:layout_below="@id/launchMapButton"
 		android:layout_alignParentEnd="true">
 
 		<LinearLayout
@@ -81,7 +70,6 @@
 				android:text="@string/dummy"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_marginTop="29dp"
 				android:id="@+id/textView" />
 		</LinearLayout>
 	</ScrollView>

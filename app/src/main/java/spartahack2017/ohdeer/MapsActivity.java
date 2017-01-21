@@ -15,8 +15,6 @@ import java.util.Calendar;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 	private GoogleMap mMap;
-	private boolean plotAroundDeer;
-	private boolean showPopUps = true;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ){
@@ -26,9 +24,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		SupportMapFragment mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
 				.findFragmentById( R.id.map );
 		mapFragment.getMapAsync( this );
-
-		plotAroundDeer = this.getIntent().getBooleanExtra( MainActivity.AVOID_DEER, false );
-		showPopUps = this.getIntent().getBooleanExtra( MainActivity.POP_UPS, false );
 	}
 
 

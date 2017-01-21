@@ -2,7 +2,7 @@
 	<string name="app_name">Oh Deer</string>
 	<string name="avoid_deer">Plot route around deer dense areas</string>
 	<string name="show_alerts">Pop-up alerts when entering deer dense areas</string>
-	<string name="launch_map">Launch Map</string>
+	<string name="launch_map">View Nearby Dear Collisions</string>
 	<string name="title_activity_maps">Map</string>
 	<string name="permissions_rationale">This app needs your location to determine if you are in a deer dense area</string>
 	<string name="dummy">Dummy</string>
