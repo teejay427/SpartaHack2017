@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 			};
 			mainHandler.post( myRunnable );
 
-			sleepTime = nextTip.length() * 200;
+			sleepTime = nextTip.length() * 100;
 			SystemClock.sleep( sleepTime );
 		}
 	}
