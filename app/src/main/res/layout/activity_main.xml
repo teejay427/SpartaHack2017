@@ -55,22 +55,35 @@
 		android:onClick="onLaunchMapButtonClick"
 		android:layout_marginBottom="10dp" />
 
-	<TextView
-		android:text="@string/dummy"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/launchMapButton"
-		android:layout_centerHorizontal="true"
-		android:id="@+id/numberOfAccidentsTextView"
-		android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/launchMapButton"
+		android:gravity="center">
 
-	<TextView
-		android:text="@string/dummy"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_below="@id/numberOfAccidentsTextView"
-		android:id="@+id/dangerZoneTextView"
-		android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+		<TextView
+			android:text="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/numberOfAccidentsTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Medium"
+			android:visibility="gone" />
+
+		<TextView
+			android:text="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/dangerZoneTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Medium"
+			android:visibility="gone" />
+
+		<TextView
+			android:text="@string/loading"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/loadingTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Large" />
+	</LinearLayout>
 
 </RelativeLayout>

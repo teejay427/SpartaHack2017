@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 	public void getCloudData(){
+		lat = 42.6217443;
+		lon = -83.4908526;
 		String cloudData = cloud.getDataFromCloud( lat, lon );
 		ArrayList<String> locations = new ArrayList<>();
 		ArrayList<myLocation> sqlLocations = new ArrayList<>();
@@ -199,9 +201,38 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
+	TextView getLoadingTextView(){
+		return ( TextView ) findViewById( R.id.loadingTextView );
+	}
+
+
+	TextView getNumberOfAccidentsTextView(){
+		return ( TextView ) findViewById( R.id.numberOfAccidentsTextView );
+	}
+
+
+	TextView getDangerZoneTextView(){
+		return ( TextView ) findViewById( R.id.dangerZoneTextView );
+	}
+
+
 	void setUI(){
-		( ( TextView ) findViewById( R.id.numberOfAccidentsTextView ) ).setText( String.format( "Number of deer in your area: %s", Integer.toString( deerCount ) ) );
-		( ( TextView ) findViewById( R.id.dangerZoneTextView ) ).setText( String.format( "Your risk level: %s", Float.toString( deerCount * monthDangerIndex() * timeOfDayDangerIndex() ) ) );
+		getLoadingTextView().setVisibility( View.GONE );
+		getNumberOfAccidentsTextView().setText( String.format( "Number of deer in your area: %s", Integer.toString( deerCount ) ) );
+		getNumberOfAccidentsTextView().setVisibility( View.VISIBLE );
+		float riskLevel = deerCount * monthDangerIndex() * timeOfDayDangerIndex();
+		String risk;
+		if( riskLevel < 40 ){
+			risk = "Low";
+		}
+		else if( riskLevel < 80 ){
+			risk = "Medium";
+		}
+		else{
+			risk = "High";
+		}
+		getDangerZoneTextView().setText( String.format( "Your risk level: %s", risk ) );
+		getDangerZoneTextView().setVisibility( View.VISIBLE );
 	}
 
 
