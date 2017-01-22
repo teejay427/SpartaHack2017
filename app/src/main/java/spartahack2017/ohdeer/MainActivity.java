@@ -175,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
 		double updatedLat;
 		double updatedLon;
 		for( int i = 0; i < 3; ++i ){
-			updatedLat = i * 0.01 * Math.cos( bearing - 90 ) + lat;
-			updatedLon = i * 0.01 * Math.sin( bearing - 90 ) + lon;
+			updatedLat = i * 0.01 * Math.sin( bearing ) + lat;
+			updatedLon = i * 0.01 * Math.cos( bearing ) + lon;
 
 			for( myLocation tempLocation : sqlLocations ){
 				float[] distance = new float[ 1 ];
