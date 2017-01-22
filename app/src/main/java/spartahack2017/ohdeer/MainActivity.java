@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.TextSwitcher;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 	static ArrayList<myLocation> forMap = new ArrayList<>();
 	static LatLng currentLocation;
 	private static final Random random = new Random();
+	static int deerCount = 0;
+	static Location myLoc;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ){
@@ -60,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
-	public void updateText( String newText ){
-		( ( TextView ) findViewById( R.id.textView ) ).setText( newText );
-	}
-
-
 	public void runTips(){
 		Resources res = getResources();
 		String[] tipsArray;
@@ -75,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
 		//noinspection InfiniteLoopStatement
 		while( true ){
 			final String nextTip = tipsArray[ random.nextInt( tipsArray.length ) ];
-
-			Log.i( "nextTip", "Next tip: " + nextTip );
 
 			Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
 			Runnable myRunnable = new Runnable() {
@@ -95,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
 	public void updateTip( String nextTip ){
 		TextSwitcher textSwitcher = ( TextSwitcher ) findViewById( R.id.tipsTextSwitcher );
-		Log.d( "textSwitcher", Boolean.toString( textSwitcher == null ) );
-		Log.d( "nextTip", Boolean.toString( nextTip == null ) );
 		if( textSwitcher != null && nextTip != null ){
 			textSwitcher.setText( nextTip );
 		}
@@ -116,49 +110,49 @@ public class MainActivity extends AppCompatActivity {
 		data += "Bearing: " + Float.toString( bearing ) + "\n";
 		double tempLat;
 		double tempLon;
-		Calendar calendar = new Calendar() {
-			@Override
-			protected void computeTime(){
-
-			}
-
-			@Override
-			protected void computeFields(){
-
-			}
-
-			@Override
-			public void add( int i, int i1 ){
-
-			}
-
-			@Override
-			public void roll( int i, boolean b ){
-
-			}
-
-			@Override
-			public int getMinimum( int i ){
-				return 0;
-			}
-
-			@Override
-			public int getMaximum( int i ){
-				return 0;
-			}
-
-			@Override
-			public int getGreatestMinimum( int i ){
-				return 0;
-			}
-
-			@Override
-			public int getLeastMaximum( int i ){
-				return 0;
-			}
-		};
 		for( String location : locations ){
 			String[] dataPoints = location.split( "," );
+			Calendar calendar = new Calendar() {
+				@Override
+				protected void computeTime(){
+
+				}
+
+				@Override
+				protected void computeFields(){
+
+				}
+
+				@Override
+				public void add( int i, int i1 ){
+
+				}
+
+				@Override
+				public void roll( int i, boolean b ){
+
+				}
+
+				@Override
+				public int getMinimum( int i ){
+					return 0;
+				}
+
+				@Override
+				public int getMaximum( int i ){
+					return 0;
+				}
+
+				@Override
+				public int getGreatestMinimum( int i ){
+					return 0;
+				}
+
+				@Override
+				public int getLeastMaximum( int i ){
+					return 0;
+				}
+			};
 			calendar.set( Integer.parseInt( dataPoints[ 0 ].substring( 0, 4 ) ), Integer.parseInt( dataPoints[ 0 ].substring( 5, 7 ) ), Integer.parseInt( dataPoints[ 0 ].substring( 8, 10 ) ) );
 			tempLat = Double.parseDouble( dataPoints[ 1 ] );
 			tempLon = Double.parseDouble( dataPoints[ 2 ] );
@@ -191,18 +185,23 @@ public class MainActivity extends AppCompatActivity {
 		Log.i( "data", data );
 
 		forMap = nearLocations;
-
-		final String finalData = data;
+		Log.v( "count", Integer.toString( nearLocations.size() ) );
+		deerCount = nearLocations.size();
 
 		Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
-
 		Runnable myRunnable = new Runnable() {
 			@Override
 			public void run(){
-				updateText( finalData );
+				setUI();
 			}
 		};
 		mainHandler.post( myRunnable );
+	}
+
+
+	void setUI(){
+		( ( TextView ) findViewById( R.id.numberOfAccidentsTextView ) ).setText( String.format( "Number of deer in your area: %s", Integer.toString( deerCount ) ) );
+		( ( TextView ) findViewById( R.id.dangerZoneTextView ) ).setText( String.format( "Your risk level: %s", Float.toString( deerCount * monthDangerIndex() * timeOfDayDangerIndex() ) ) );
 	}
 
 
@@ -259,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
 			locationManager.requestLocationUpdates( bestAvailable, 500, 1, activeListener );
 			Location location = locationManager.getLastKnownLocation( bestAvailable );
 			onLocation( location );
-			Log.i( "provider", bestAvailable );
 		}
 	}
 
@@ -269,19 +267,20 @@ public class MainActivity extends AppCompatActivity {
 			return;
 		}
 
-		Log.i( "location", Double.toString( location.getLatitude() ) + ", " + Double.toString( location.getLongitude() ) );
 		lat = location.getLatitude();
 		lon = location.getLongitude();
-		bearing = location.getBearing();
+		bearing = 0;// location.getBearing();
 		currentLocation = new LatLng( lat, lon );
-		new Thread(
+		myLoc = location;
+		Thread thread = new Thread(
 				new Runnable() {
 					@Override
 					public void run(){
 						getCloudData();
 					}
 				}
-		).start();
+		);
+		thread.start();
 	}
 
 
@@ -321,5 +320,56 @@ public class MainActivity extends AppCompatActivity {
 	protected void onPause(){
 		unregisterListeners();
 		super.onPause();
+	}
+
+
+	float monthDangerIndex(){
+		Calendar calendar = Calendar.getInstance();
+		calendar.get( Calendar.MONTH );
+		switch( calendar.get( Calendar.MONTH ) ){
+			case 0:
+				return 1.01f;
+			case 1:
+				return 0.97f;
+			case 2:
+				return 1.0f;
+			case 3:
+				return 0.98f;
+			case 4:
+				return 1.0f;
+			case 5:
+				return 1.02f;
+			case 6:
+				return 0.97f;
+			case 7:
+				return 0.94f;
+			case 8:
+				return 1.0f;
+			case 9:
+				return 1.14f;
+			case 10:
+				return 1.24f;
+			case 11:
+				return 1.05f;
+		}
+		return 0.0f;
+	}
+
+
+	float timeOfDayDangerIndex(){
+		Calendar calendar = Calendar.getInstance();
+		if( calendar.get( Calendar.HOUR_OF_DAY ) < 4 ){
+			return 1.0f;
+		}
+		if( calendar.get( Calendar.HOUR_OF_DAY ) < 8 ){
+			return 1.1f;
+		}
+		if( calendar.get( Calendar.HOUR_OF_DAY ) < 17 ){
+			return 0.9f;
+		}
+		if( calendar.get( Calendar.HOUR_OF_DAY ) < 22 ){
+			return 1.1f;
+		}
+		return 1.0f;
 	}
 }

@@ -55,22 +55,22 @@
 		android:onClick="onLaunchMapButtonClick"
 		android:layout_marginBottom="10dp" />
 
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/launchMapButton"
-		android:layout_alignParentEnd="true">
+	<TextView
+		android:text="@string/dummy"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/launchMapButton"
+		android:layout_centerHorizontal="true"
+		android:id="@+id/numberOfAccidentsTextView"
+		android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical" >
+	<TextView
+		android:text="@string/dummy"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@id/numberOfAccidentsTextView"
+		android:id="@+id/dangerZoneTextView"
+		android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-			<TextView
-				android:text="@string/dummy"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:id="@+id/textView" />
-		</LinearLayout>
-	</ScrollView>
 </RelativeLayout>
