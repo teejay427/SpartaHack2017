@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 			};
 			mainHandler.post( myRunnable );
 
-			sleepTime = nextTip.length() * 100;
+			sleepTime = nextTip.length() * 150;
 			SystemClock.sleep( sleepTime );
 		}
 	}
@@ -241,12 +241,13 @@ public class MainActivity extends AppCompatActivity {
 
 	@SuppressWarnings( "MissingPermission" )
 	private void registerListeners(){
+		Log.i( "registerListeners", "registering listeners" );
 		unregisterListeners();
 
 		// Create a Criteria object
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy( Criteria.ACCURACY_FINE );
-		criteria.setPowerRequirement( Criteria.POWER_HIGH );
+		criteria.setPowerRequirement( Criteria.POWER_MEDIUM );
 		criteria.setAltitudeRequired( true );
 		criteria.setBearingRequired( false );
 		criteria.setSpeedRequired( false );
@@ -254,33 +255,46 @@ public class MainActivity extends AppCompatActivity {
 
 		String bestAvailable = locationManager.getBestProvider( criteria, true );
 
+		Log.v( "bestAvailable", "best available provider: \"" + bestAvailable + "\"" );
+
 		if( bestAvailable != null ){
 			locationManager.requestLocationUpdates( bestAvailable, 500, 1, activeListener );
 			Location location = locationManager.getLastKnownLocation( bestAvailable );
+			if( location == null ){
+				Log.v( "bestAvailable", "no location from bestAvailable" );
+				criteria.setAccuracy( Criteria.ACCURACY_COARSE );
+				bestAvailable = locationManager.getBestProvider( criteria, true );
+				locationManager.requestLocationUpdates( bestAvailable, 500, 1, activeListener );
+				location = locationManager.getLastKnownLocation( bestAvailable );
+			}
+			Log.d( "location", Boolean.toString( location == null ) );
 			onLocation( location );
 		}
 	}
 
 
 	private void onLocation( Location location ){
+
 		if( location == null ){
+			Log.i( "location", "location null" );
 			return;
 		}
+
+		Log.i( "location", "running on location" );
 
 		lat = location.getLatitude();
 		lon = location.getLongitude();
 		bearing = 0;// location.getBearing();
 		currentLocation = new LatLng( lat, lon );
 		myLoc = location;
-		Thread thread = new Thread(
+		new Thread(
 				new Runnable() {
 					@Override
 					public void run(){
 						getCloudData();
 					}
 				}
-		);
-		thread.start();
+		).start();
 	}
 
 
@@ -288,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
 
 		@Override
 		public void onLocationChanged( Location location ){
+			Log.i( "onLocationChanged", "location changed" );
 			onLocation( location );
 		}
 
@@ -298,11 +313,13 @@ public class MainActivity extends AppCompatActivity {
 
 		@Override
 		public void onProviderEnabled( String provider ){
+			Log.v( "onProviderEnabled", "provider \"" + provider + "\" enabled" );
 			registerListeners();
 		}
 
 		@Override
 		public void onProviderDisabled( String provider ){
+			Log.v( "onProviderDisabled", "provider \"" + provider + "\" disabled" );
 			registerListeners();
 		}
 	}
@@ -312,6 +329,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onResume(){
 		super.onResume();
 
+		Log.v( "onResume", "resuming application" );
 		registerListeners();
 	}
 

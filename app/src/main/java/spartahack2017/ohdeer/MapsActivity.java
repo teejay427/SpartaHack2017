@@ -49,12 +49,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		for( myLocation tempLocation : MainActivity.forMap ){
 			tempLatLng = new LatLng( tempLocation.lat, tempLocation.lon );
 			mMap.addMarker( new MarkerOptions().position( tempLatLng ).title(
-				tempLocation.calendar.get( Calendar.YEAR ) + "-" +
-				tempLocation.calendar.get( Calendar.MONTH ) + "-" +
-				tempLocation.calendar.get( Calendar.DAY_OF_MONTH ) ) );
+					tempLocation.calendar.get( Calendar.YEAR ) + "-" +
+							tempLocation.calendar.get( Calendar.MONTH ) + "-" +
+							tempLocation.calendar.get( Calendar.DAY_OF_MONTH ) ) );
 		}
 
 		float zoomLevel = 12.0f;
-		mMap.moveCamera( CameraUpdateFactory.newLatLngZoom( MainActivity.currentLocation, zoomLevel ) );
+		if( MainActivity.currentLocation != null ){
+			mMap.moveCamera( CameraUpdateFactory.newLatLngZoom( MainActivity.currentLocation, zoomLevel ) );
+		}
 	}
 }
