@@ -23,7 +23,7 @@ class Cloud {
 		String response;
 		String postDataStr = "";
 
-		Log.d( "data", "starting data pull" );
+		//Log.d( "data", "starting data pull" );
 
 		try{
 			postDataStr = "lat=" + URLEncoder.encode( String.format( "%.1f", lat ), "UTF-8" );
@@ -66,7 +66,7 @@ class Cloud {
 			response = total.substring( 199 );
 
 			stream.close();
-			Log.d( "data", "finished data pull" );
+			//Log.d( "data", "finished data pull" );
 			return response;
 		}
 		catch( MalformedURLException e ){

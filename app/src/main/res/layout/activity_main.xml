@@ -6,7 +6,6 @@
 	android:id="@+id/activity_main"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:paddingBottom="@dimen/activity_vertical_margin"
 	android:paddingLeft="@dimen/activity_horizontal_margin"
 	android:paddingRight="@dimen/activity_horizontal_margin"
 	android:paddingTop="@dimen/activity_vertical_margin"
@@ -22,11 +21,68 @@
 		android:contentDescription="@string/splash"
 		android:layout_marginBottom="30dp" />
 
-	<TextSwitcher
+	<LinearLayout
+		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/tipsTextSwitcher"
 		android:layout_below="@id/splashImageView"
+		android:id="@+id/statsLinearLayout"
+		android:gravity="center"
+		android:layout_marginBottom="20dp">
+
+		<TextView
+			android:text="@string/risk_level"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/riskLevelLabelTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Medium"
+			android:gravity="center"
+			android:layout_marginBottom="2dp"
+			android:visibility="gone"
+			android:textSize="20sp" />
+
+		<TextView
+			android:text="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/riskLevelTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Large"
+			android:layout_marginBottom="10dp"
+			android:visibility="gone"
+			android:textSize="25sp" />
+
+		<TextView
+			android:text="@string/dummy"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/numberOfAccidentsTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Medium"
+			android:visibility="gone"
+			android:textSize="20sp" />
+
+		<TextView
+			android:text="@string/loading"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/loadingTextView"
+			android:textAppearance="@android:style/TextAppearance.Material.Large" />
+	</LinearLayout>
+
+	<Button
+		android:text="@string/launch_map"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/launchMapButton"
+		android:layout_below="@id/statsLinearLayout"
+		android:layout_centerHorizontal="true"
+		android:onClick="onLaunchMapButtonClick"
+		android:layout_marginBottom="10dp" />
+
+	<TextSwitcher
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/tipsTextSwitcher"
+		android:layout_below="@id/launchMapButton"
 		android:layout_marginBottom="30dp" >
 
 		<TextView
@@ -44,46 +100,5 @@
 			android:textStyle="normal|bold" />
 
 	</TextSwitcher>
-
-	<Button
-		android:text="@string/launch_map"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/launchMapButton"
-		android:layout_below="@+id/tipsTextSwitcher"
-		android:layout_centerHorizontal="true"
-		android:onClick="onLaunchMapButtonClick"
-		android:layout_marginBottom="10dp" />
-
-	<LinearLayout
-		android:orientation="vertical"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/launchMapButton"
-		android:gravity="center">
-
-		<TextView
-			android:text="@string/dummy"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/numberOfAccidentsTextView"
-			android:textAppearance="@android:style/TextAppearance.Material.Medium"
-			android:visibility="gone" />
-
-		<TextView
-			android:text="@string/dummy"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/dangerZoneTextView"
-			android:textAppearance="@android:style/TextAppearance.Material.Medium"
-			android:visibility="gone" />
-
-		<TextView
-			android:text="@string/loading"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/loadingTextView"
-			android:textAppearance="@android:style/TextAppearance.Material.Large" />
-	</LinearLayout>
 
 </RelativeLayout>

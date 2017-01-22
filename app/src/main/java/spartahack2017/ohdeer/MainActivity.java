@@ -8,6 +8,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
 		// Get the location manager
 		locationManager = ( LocationManager ) getSystemService( Context.LOCATION_SERVICE );
+
+		( findViewById( R.id.splashImageView ) ).setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick( View view ){
+				MediaPlayer mediaPlayer = MediaPlayer.create( MainActivity.this, R.raw.deer_scream );
+				mediaPlayer.start();
+			}
+		} );
 	}
 
 
@@ -98,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 	public void getCloudData(){
-		lat = 42.6217443;
-		lon = -83.4908526;
+		//lat = 42.6217443;
+		//lon = -83.4908526;
 		String cloudData = cloud.getDataFromCloud( lat, lon );
 		ArrayList<String> locations = new ArrayList<>();
 		ArrayList<myLocation> sqlLocations = new ArrayList<>();
@@ -108,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
 		locations.remove( locations.size() - 1 );
 
-		String data = "Current location: " + Double.toString( lat ) + ", " + Double.toString( lon ) + "\n";
-		data += "Bearing: " + Float.toString( bearing ) + "\n";
+		//String data = "Current location: " + Double.toString( lat ) + ", " + Double.toString( lon ) + "\n";
+		//data += "Bearing: " + Float.toString( bearing ) + "\n";
 		double tempLat;
 		double tempLon;
 		for( String location : locations ){
@@ -176,18 +186,18 @@ public class MainActivity extends AppCompatActivity {
 				if( distance[ 0 ] < 4828 ){
 					if( !nearLocations.contains( tempLocation ) ){
 						nearLocations.add( tempLocation );
-						data += nearLocations.get( nearLocations.size() - 1 ).toString() + "\n";
+						//data += nearLocations.get( nearLocations.size() - 1 ).toString() + "\n";
 					}
 				}
 			}
 		}
 
-		data += "Count: " + Integer.toString( nearLocations.size() ) + "\n";
+		//data += "Count: " + Integer.toString( nearLocations.size() ) + "\n";
 
-		Log.i( "data", data );
+		//Log.i( "data", data );
 
 		forMap = nearLocations;
-		Log.v( "count", Integer.toString( nearLocations.size() ) );
+		//Log.v( "count", Integer.toString( nearLocations.size() ) );
 		deerCount = nearLocations.size();
 
 		Handler mainHandler = new Handler( MainActivity.this.getMainLooper() );
@@ -211,14 +221,19 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
-	TextView getDangerZoneTextView(){
-		return ( TextView ) findViewById( R.id.dangerZoneTextView );
+	TextView getRiskLevelTextView(){
+		return ( TextView ) findViewById( R.id.riskLevelTextView );
+	}
+
+
+	TextView getRiskLevelLabelTextView(){
+		return ( TextView ) findViewById( R.id.riskLevelLabelTextView );
 	}
 
 
 	void setUI(){
 		getLoadingTextView().setVisibility( View.GONE );
-		getNumberOfAccidentsTextView().setText( String.format( "Number of deer in your area: %s", Integer.toString( deerCount ) ) );
+		getNumberOfAccidentsTextView().setText( String.format( "Number of deer collisions in your area: %s", Integer.toString( deerCount ) ) );
 		getNumberOfAccidentsTextView().setVisibility( View.VISIBLE );
 		float riskLevel = deerCount * monthDangerIndex() * timeOfDayDangerIndex();
 		String risk;
@@ -231,8 +246,9 @@ public class MainActivity extends AppCompatActivity {
 		else{
 			risk = "High";
 		}
-		getDangerZoneTextView().setText( String.format( "Your risk level: %s", risk ) );
-		getDangerZoneTextView().setVisibility( View.VISIBLE );
+		getRiskLevelTextView().setText( risk );
+		getRiskLevelLabelTextView().setVisibility( View.VISIBLE );
+		getRiskLevelTextView().setVisibility( View.VISIBLE );
 	}
 
 
@@ -272,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
 	@SuppressWarnings( "MissingPermission" )
 	private void registerListeners(){
-		Log.i( "registerListeners", "registering listeners" );
+		//Log.i( "registerListeners", "registering listeners" );
 		unregisterListeners();
 
 		// Create a Criteria object
@@ -286,19 +302,19 @@ public class MainActivity extends AppCompatActivity {
 
 		String bestAvailable = locationManager.getBestProvider( criteria, true );
 
-		Log.v( "bestAvailable", "best available provider: \"" + bestAvailable + "\"" );
+		//Log.v( "bestAvailable", "best available provider: \"" + bestAvailable + "\"" );
 
 		if( bestAvailable != null ){
 			locationManager.requestLocationUpdates( bestAvailable, 500, 1, activeListener );
 			Location location = locationManager.getLastKnownLocation( bestAvailable );
 			if( location == null ){
-				Log.v( "bestAvailable", "no location from bestAvailable" );
+				//Log.v( "bestAvailable", "no location from bestAvailable" );
 				criteria.setAccuracy( Criteria.ACCURACY_COARSE );
 				bestAvailable = locationManager.getBestProvider( criteria, true );
 				locationManager.requestLocationUpdates( bestAvailable, 500, 1, activeListener );
 				location = locationManager.getLastKnownLocation( bestAvailable );
 			}
-			Log.d( "location", Boolean.toString( location == null ) );
+			//Log.d( "location", Boolean.toString( location == null ) );
 			onLocation( location );
 		}
 	}
@@ -307,15 +323,15 @@ public class MainActivity extends AppCompatActivity {
 	private void onLocation( Location location ){
 
 		if( location == null ){
-			Log.i( "location", "location null" );
+			//Log.i( "location", "location null" );
 			return;
 		}
 
-		Log.i( "location", "running on location" );
+		//Log.i( "location", "running on location" );
 
 		lat = location.getLatitude();
 		lon = location.getLongitude();
-		bearing = 0;// location.getBearing();
+		bearing = location.getBearing();
 		currentLocation = new LatLng( lat, lon );
 		myLoc = location;
 		new Thread(
@@ -360,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onResume(){
 		super.onResume();
 
-		Log.v( "onResume", "resuming application" );
+		//Log.v( "onResume", "resuming application" );
 		registerListeners();
 	}
 

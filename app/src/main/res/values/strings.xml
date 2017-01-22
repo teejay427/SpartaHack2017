@@ -7,5 +7,6 @@
 	<string name="permissions_rationale">This app needs your location to determine if you are in a deer dense area</string>
 	<string name="dummy">Dummy</string>
 	<string name="splash">Splash Image</string>
-	<string name="loading">Loading...</string>
+	<string name="loading">Loading…</string>
+	<string name="risk_level">Your risk level:</string>
 </resources>
